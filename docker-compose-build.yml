@@ -1,0 +1,26 @@
+version: '2'
+services:
+  postgresql:
+    image: postgres:9.5
+    command: postgres
+    volumes:
+      - ./migrations:/docker-entrypoint-initdb.d
+  redis:
+    image: redis
+  test:
+    volumes:
+      - .:/usr/src/app
+    build:
+      context: .
+    links:
+      - postgresql
+      - redis
+    depends_on:
+      - postgresql
+      - redis
+    environment:
+      - NODE_ENV=testing
+      - DATABASE_URI=postgres://redvelvet@postgresql/access_testing
+      - DATABASE_INITIALIZATION_URI=postgres://postgres@postgresql/template1
+      - REDIS_URL=redis://redis:6379
+      - SECRET_KEY=123d1553cr3t

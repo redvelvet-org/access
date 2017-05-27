@@ -1,0 +1,34 @@
+version: '2'
+services:
+  web:
+    environment:
+      - PORT=6007
+      - NODE_ENV=development
+      - DATABASE_URI=postgres://redvelvet@postgresql/access_development
+      - DATABASE_INITIALIZATION_URI=postgres://postgres@postgresql/template1
+      - AUTH_SECRET_KEY=super-secret
+      - REDIS_URL=redis://redis:6379
+      - REDIS_SECRET_KEY=i23d1553cr3t
+    volumes:
+      - .:/usr/src/app
+    build:
+      context: .
+    command: watchexec -e js -r yarn run start | ./node_modules/.bin/bunyan
+    ports:
+      - "6007:6007"
+  test:
+    volumes:
+      - .:/usr/src/app
+    build:
+      context: .
+    environment:
+      - NODE_ENV=testing
+      - DATABASE_URI=postgres://redvelvet@postgresql/access_testing
+      - DATABASE_INITIALIZATION_URI=postgres://postgres@postgresql/template1
+      - AUTH_SECRET_KEY=super-secret
+      - REDIS_URL=redis://redis:6379
+      - REDIS_SECRET_KEY=i23d1553cr3t
+networks:
+  default:
+    external:
+      name: oaknuggins_default

@@ -24,3 +24,5 @@ app.use(bunyanMiddleware({
 app.listen(process.env.PORT, () => {
   console.log(`started server on ${process.env.PORT}`);
 });
+
+module.exports = app;

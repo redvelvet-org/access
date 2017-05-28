@@ -5,6 +5,7 @@ const Celebrate = require('celebrate');
 const bunyanMiddleware = require('bunyan-middleware');
 const routes = require('./routes');
 const logger = require('./lib/logger');
+const errorMiddleware = require('./middlewares/errors');
 
 const app = express();
 
@@ -18,9 +19,11 @@ app.use(bodyParser.json({
 }));
 app.use(routes);
 app.use(Celebrate.errors());
+app.use(errorMiddleware);
 app.use(bunyanMiddleware({
   logger
 }));
+
 app.listen(process.env.PORT, () => {
   console.log(`started server on ${process.env.PORT}`);
 });

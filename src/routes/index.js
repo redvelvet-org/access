@@ -1,5 +1,6 @@
 const { Router } = require('express');
-const role = require('./role');
+const roles = require('./roles');
+const privileges = require('./privileges');
 
 const router = new Router();
 
@@ -7,6 +8,7 @@ router.get('/health', (req, res) => {
   res.status(200).send('💪');
 });
 
-router.use(role);
+router.use(roles);
+router.use(privileges);
 
 module.exports = router;

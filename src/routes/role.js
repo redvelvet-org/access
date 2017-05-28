@@ -4,7 +4,6 @@ const validation = require('../validations/role');
 
 const router = new Router();
 
-
 router.get('/v1/roles/:id', validation.read, async (req, res, next) => {
   try {
     const role = await roleActions.read(req.params.id);

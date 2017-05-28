@@ -28,7 +28,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
 
-
   return sequelize.define('RolePrivilege', fields, {
     paranoid: true,
     tableName: 'role_privileges',

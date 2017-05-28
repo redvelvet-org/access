@@ -1,6 +1,6 @@
 const { Router } = require('express');
-const roleActions = require('../services/role');
-const validation = require('../validations/role');
+const roleActions = require('../services/roles');
+const validation = require('../validations/roles');
 
 const router = new Router();
 

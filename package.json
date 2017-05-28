@@ -17,7 +17,7 @@
     "spec": "./node_modules/.bin/nyc yarn run test",
     "db:migrate": "./node_modules/.bin/sequelize --config src/config/db.js db:migrate",
     "db:setup": "./src/bin/initialize && yarn run db:migrate",
-    "build:test": "yarn run db:setup && yarn run test"
+    "build:test": "yarn run db:setup && yarn run coverage"
   },
   "dependencies": {
     "body-parser": "^1.17.2",

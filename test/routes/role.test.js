@@ -6,7 +6,7 @@ const {
 const uuid = require('uuid');
 const server = require('../../src');
 const { Role } = require('../../src/models');
-const roleActions = require('../../src/services/role');
+const roleActions = require('../../src/services/roles');
 
 describe('v1/role', () => {
   let sandbox = null;

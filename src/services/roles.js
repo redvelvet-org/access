@@ -1,5 +1,5 @@
 const boom = require('boom');
-const { Role } = require('../../models');
+const { Role } = require('../models');
 
 const read = async (id) => {
   const role = await Role.findById(id);

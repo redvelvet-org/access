@@ -203,6 +203,15 @@ describe('v1/privilege', () => {
     expect(res.statusCode).to.equal(404);
   });
 
+  it('should throw error on invalid privilege id format', async() => {
+    const res = await request(server)
+      .put(`/v1/privileges/123/roles`)
+      .send({
+        roleIds: [uuid.v4()]
+      });
+    expect(res.statusCode).to.equal(400);
+  });
+
   it('should work on duplicate role ids', async() => {
     const role = await Role.create({
       name: 'Role-A'

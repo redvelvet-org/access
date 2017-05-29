@@ -42,7 +42,7 @@ router.put('/v1/roles/:id', validation.update, async (req, res, next) => {
 
 router.delete('/v1/roles/:id', validation.remove, async (req, res, next) => {
   try {
-    const role = await roleActions.remove(req.params.id, req.body);
+    const role = await roleActions.remove(req.params.id);
     res.json(role);
   } catch (e) {
     next(e);

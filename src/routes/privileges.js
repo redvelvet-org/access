@@ -6,8 +6,8 @@ const router = new Router();
 
 router.get('/v1/privileges/:id', validation.read, async (req, res, next) => {
   try {
-    const role = await privilegesAction.read(req.params.id);
-    res.json(role);
+    const privilege = await privilegesAction.read(req.params.id);
+    res.json(privilege);
   } catch (e) {
     next(e);
   }
@@ -15,8 +15,8 @@ router.get('/v1/privileges/:id', validation.read, async (req, res, next) => {
 
 router.get('/v1/privileges/', validation.search, async (req, res, next) => {
   try {
-    const role = await privilegesAction.search(req.query.ids);
-    res.json(role);
+    const privileges = await privilegesAction.search(req.query.ids);
+    res.json(privileges);
   } catch (e) {
     next(e);
   }
@@ -24,8 +24,8 @@ router.get('/v1/privileges/', validation.search, async (req, res, next) => {
 
 router.post('/v1/privileges', validation.create, async (req, res, next) => {
   try {
-    const role = await privilegesAction.create(req.body);
-    res.json(role);
+    const privilege = await privilegesAction.create(req.body);
+    res.json(privilege);
   } catch (e) {
     next(e);
   }
@@ -33,8 +33,8 @@ router.post('/v1/privileges', validation.create, async (req, res, next) => {
 
 router.put('/v1/privileges/:id', validation.update, async (req, res, next) => {
   try {
-    const role = await privilegesAction.update(req.params.id, req.body);
-    res.json(role);
+    const privilege = await privilegesAction.update(req.params.id, req.body);
+    res.json(privilege);
   } catch (e) {
     next(e);
   }
@@ -42,8 +42,17 @@ router.put('/v1/privileges/:id', validation.update, async (req, res, next) => {
 
 router.delete('/v1/privileges/:id', validation.remove, async (req, res, next) => {
   try {
-    const role = await privilegesAction.remove(req.params.id, req.body);
-    res.json(role);
+    const privilege = await privilegesAction.remove(req.params.id);
+    res.json(privilege);
+  } catch (e) {
+    next(e);
+  }
+});
+
+router.get('/v1/privileges/:id/roles', validation.read, async (req, res, next) => {
+  try {
+    const roles = await privilegesAction.readRoles(req.params.id);
+    res.json(roles);
   } catch (e) {
     next(e);
   }

@@ -64,10 +64,21 @@ const remove = async (id) => {
   });
 };
 
+const readRoles = async(id) => {
+  const privilege = await Privilege.findById(id);
+
+  if (!privilege) {
+    throw boom.notFound();
+  }
+
+  return privilege.roleIds;
+};
+
 module.exports = {
   read,
   search,
   create,
   update,
-  remove
+  remove,
+  readRoles
 };

@@ -5,7 +5,7 @@ const {
 } = require('chai');
 const uuid = require('uuid');
 const server = require('../../src');
-const { Privilege } = require('../../src/models');
+const { Privilege, Role } = require('../../src/models');
 const privilegesAction = require('../../src/services/privileges');
 
 describe('v1/privilege', () => {
@@ -128,6 +128,31 @@ describe('v1/privilege', () => {
     it('should throw error if failed', async() => {
       const res = await request(server)
         .delete(`/v1/privileges/${uuid.v4()}`);
+      expect(res.statusCode).to.equal(404);
+    });
+  });
+
+  describe('get roles', () => {
+    it('should work for valid id', async() => {
+      const role = await Role.create({
+        name: 'Role-A'
+      });
+
+      const privilege = await Privilege.create({
+        name: 'privilege-A',
+        scope: 'admin',
+        roleIds: [ role.id ]
+      });
+
+      const res = await request(server)
+        .get(`/v1/privileges/${privilege.id}/roles`);
+      expect(res.statusCode).to.equal(200);
+      expect(res.body).to.deep.equal([ role.id ]);
+    });
+
+    it('should throw 404 if not found id', async() => {
+      const res = await request(server)
+        .get(`/v1/privileges/${uuid.v4()}/roles`);
       expect(res.statusCode).to.equal(404);
     });
   });

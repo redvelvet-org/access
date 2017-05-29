@@ -58,4 +58,13 @@ router.get('/v1/privileges/:id/roles', validation.read, async (req, res, next) =
   }
 });
 
+router.put('/v1/privileges/:id/roles', validation.addRoles, async (req, res, next) => {
+  try {
+    const roles = await privilegesAction.addRoles(req.params.id, req.body.roleIds);
+    res.json(roles);
+  } catch (e) {
+    next(e);
+  }
+});
+
 module.exports = router;

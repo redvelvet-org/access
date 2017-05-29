@@ -1,5 +1,6 @@
 const boom = require('boom');
-const { Privilege } = require('../models');
+const _ = require('lodash');
+const { Privilege, Role } = require('../models');
 
 const read = async (id) => {
   const privilege = await Privilege.findById(id);
@@ -74,11 +75,42 @@ const readRoles = async(id) => {
   return privilege.roleIds;
 };
 
+const addRoles = async(id, roleIds) => {
+  const privilege = await Privilege.findById(id);
+
+  if (!privilege) {
+    throw boom.notFound();
+  }
+
+  const roles = await Role.findAll({
+    where: {
+      id: roleIds
+    }
+  });
+
+  if (roles.length !== _.uniq(roleIds).length) {
+    throw boom.badRequest();
+  }
+
+  const newRoles = _.uniq([...privilege.roleIds, ...roleIds]);
+
+  await Privilege.update({
+    roleIds: newRoles
+  }, {
+    where: {
+      id
+    }
+  });
+
+  return Privilege.findById(id);
+};
+
 module.exports = {
   read,
   search,
   create,
   update,
   remove,
-  readRoles
+  readRoles,
+  addRoles
 };

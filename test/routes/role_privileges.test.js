@@ -17,7 +17,7 @@ describe('v1/role', () => {
     sandbox.restore();
   });
 
-  describe('get', () => {
+  describe.skip('get', () => {
     it('should work for valid id', async() => {
       const role = await Role.create({
         name: 'Role-A'

@@ -59,10 +59,21 @@ const remove = async (id) => {
   });
 };
 
+const readPrivileges = async (id) => {
+  const role = await Role.findById(id);
+
+  if (!role) {
+    throw boom.notFound();
+  }
+
+  return role.privilegeIds;
+};
+
 module.exports = {
   read,
   search,
   create,
   update,
-  remove
+  remove,
+  readPrivileges
 };

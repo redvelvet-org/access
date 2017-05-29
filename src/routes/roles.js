@@ -49,4 +49,13 @@ router.delete('/v1/roles/:id', validation.remove, async (req, res, next) => {
   }
 });
 
+router.get('/v1/roles/:id/privileges', validation.read, async (req, res, next) => {
+  try {
+    const role = await roleActions.readPrivileges(req.params.id);
+    res.json(role);
+  } catch (e) {
+    next(e);
+  }
+});
+
 module.exports = router;

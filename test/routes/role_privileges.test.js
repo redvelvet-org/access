@@ -8,7 +8,7 @@ const server = require('../../src');
 const { Role, Privilege, RolePrivilege } = require('../../src/models');
 const rolePrivilegeActions = require('../../src/services/role_privileges');
 
-describe('v1/role', () => {
+describe.skip('v1/role-privilege', () => {
   let sandbox = null;
   beforeEach(async() => {
     sandbox = sinon.sandbox.create();
@@ -17,7 +17,7 @@ describe('v1/role', () => {
     sandbox.restore();
   });
 
-  describe.skip('get', () => {
+  describe('get', () => {
     it('should work for valid id', async() => {
       const role = await Role.create({
         name: 'Role-A'

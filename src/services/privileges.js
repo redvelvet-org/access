@@ -72,7 +72,14 @@ const readRoles = async(id) => {
     throw boom.notFound();
   }
 
-  return privilege.roleIds;
+  const roles = await Role.findAll({
+    where: {
+      id: privilege.roleIds
+    }
+  });
+
+  const roleIds = roles.map(r => r.id);
+  return roleIds;
 };
 
 const addRoles = async(id, roleIds) => {
@@ -105,6 +112,25 @@ const addRoles = async(id, roleIds) => {
   return Privilege.findById(id);
 };
 
+const removeRoles = async(id, roleIds, action) => {
+  const privilege = await Privilege.findById(id);
+
+  if (!privilege) {
+    throw boom.notFound();
+  }
+
+  const filtered = privilege.roleIds.filter(p => !roleIds.includes(p));
+
+  await Privilege.update({
+    roleIds: filtered
+  }, {
+    where: {
+      id
+    }
+  });
+  return Privilege.findById(id);
+};
+
 module.exports = {
   read,
   search,
@@ -112,5 +138,6 @@ module.exports = {
   update,
   remove,
   readRoles,
-  addRoles
+  addRoles,
+  removeRoles
 };

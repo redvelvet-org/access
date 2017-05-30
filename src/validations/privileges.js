@@ -36,12 +36,13 @@ const remove = Celebrate({
   }
 });
 
-const addRoles = Celebrate({
+const manageRoles = Celebrate({
   params: {
     id: Joi.string().guid().description('Privilege ID').required()
   },
   body: {
-    roleIds: Joi.array().items(Joi.string().guid().description('Role Id'))
+    roleIds: Joi.array().items(Joi.string().guid().description('Role Id')),
+    action: Joi.string().description('Action').required()
   }
 });
 
@@ -51,5 +52,5 @@ module.exports = {
   create,
   update,
   remove,
-  addRoles
+  manageRoles
 };

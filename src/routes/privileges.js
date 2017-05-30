@@ -1,4 +1,5 @@
 const { Router } = require('express');
+const boom = require('boom');
 const privilegesAction = require('../services/privileges');
 const validation = require('../validations/privileges');
 
@@ -58,9 +59,18 @@ router.get('/v1/privileges/:id/roles', validation.read, async (req, res, next) =
   }
 });
 
-router.put('/v1/privileges/:id/roles', validation.addRoles, async (req, res, next) => {
+router.put('/v1/privileges/:id/roles', validation.manageRoles, async (req, res, next) => {
   try {
-    const roles = await privilegesAction.addRoles(req.params.id, req.body.roleIds);
+    let roles;
+
+    if (req.body.action === 'add') {
+      roles = await privilegesAction.addRoles(req.params.id, req.body.roleIds);
+    } else if (req.body.action === 'remove') {
+      roles = await privilegesAction.removeRoles(req.params.id, req.body.roleIds);
+    } else {
+      throw boom.badRequest();
+    }
+
     res.json(roles);
   } catch (e) {
     next(e);

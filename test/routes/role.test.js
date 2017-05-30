@@ -122,7 +122,7 @@ describe('v1/role', () => {
     });
   });
 
-  describe('get privilges', () => {
+  describe('get privilges ', () => {
     it('should work for valid id', async() => {
       const privilege = await Privilege.create({
         name: 'privilege-A',
@@ -131,19 +131,174 @@ describe('v1/role', () => {
 
       const role = await Role.create({
         name: 'Role-A',
-        privilegeIds: [ privilege.id ]
+        privilegeIds: [privilege.id]
       });
 
       const res = await request(server)
         .get(`/v1/roles/${role.id}/privileges`);
       expect(res.statusCode).to.equal(200);
-      expect(res.body).to.deep.equal([ privilege.id ]);
+      expect(res.body).to.deep.equal([privilege.id]);
     });
 
     it('should throw 404 if not found id', async() => {
       const res = await request(server)
         .get(`/v1/roles/${uuid.v4()}/privileges`);
       expect(res.statusCode).to.equal(404);
+    });
+  });
+
+  describe('add privilege', () => {
+    it('should add privilege for valid request', async() => {
+      const privilege = await Privilege.create({
+        name: 'privilege-A',
+        scope: 'admin'
+      });
+
+      const role = await Role.create({
+        name: 'Role-A'
+      });
+
+      const res = await request(server)
+        .put(`/v1/roles/${role.id}/privileges`)
+        .send({
+          privilegeIds: [privilege.id],
+          action: 'add'
+        });
+
+      expect(res.statusCode).to.equal(200);
+      expect(res.body.privilegeIds).to.deep.equal([privilege.id]);
+    });
+
+    it('should throw error on invalid privileges', async() => {
+      const role = await Role.create({
+        name: 'Role-A'
+      });
+
+      const res = await request(server)
+        .put(`/v1/roles/${role.id}/privileges`)
+        .send({
+          privilegeIds: [uuid.v4()],
+          action: 'add'
+        });
+
+      expect(res.statusCode).to.equal(400);
+    });
+
+    it('should throw error on invalid role', async() => {
+      const res = await request(server)
+        .put(`/v1/roles/${uuid.v4()}/privileges`)
+        .send({
+          privilegeIds: [uuid.v4()],
+          action: 'add'
+        });
+
+      expect(res.statusCode).to.equal(404);
+    });
+
+    it('should throw error on invalid role id format', async() => {
+      const res = await request(server)
+        .put(`/v1/roles/123/privileges`)
+        .send({
+          privilegeIds: [uuid.v4()],
+          action: 'add'
+        });
+      expect(res.statusCode).to.equal(400);
+    });
+
+    it('should work on duplicate privilege ids', async() => {
+      const role = await Role.create({
+        name: 'Role-A'
+      });
+
+      const privilege = await Privilege.create({
+        name: 'privilege-A',
+        scope: 'admin'
+      });
+      const res = await request(server)
+        .put(`/v1/roles/${role.id}/privileges`)
+        .send({
+          privilegeIds: [privilege.id, privilege.id],
+          action: 'add'
+        });
+
+      expect(res.statusCode).to.equal(200);
+      expect(res.body.privilegeIds).to.deep.equal([privilege.id]);
+    });
+  });
+
+  describe('remove privileges', () => {
+    it('should remove privilege for valid request', async() => {
+      const privilege1 = await Privilege.create({
+        name: 'Priv-A',
+        scope: 'admin'
+      });
+
+      const privilege2 = await Privilege.create({
+        name: 'Priv-B',
+        scope: 'admin'
+      });
+
+      const role = await Role.create({
+        name: 'Role-A',
+        privilegeIds: [privilege1.id, privilege2.id]
+      });
+
+      const res = await request(server)
+        .put(`/v1/roles/${role.id}/privileges`)
+        .send({
+          privilegeIds: [privilege1.id],
+          action: 'remove'
+        });
+
+      expect(res.statusCode).to.equal(200);
+      expect(res.body.privilegeIds).to.deep.equal([privilege2.id]);
+    });
+
+    it('should not remove privilege for invalid request', async() => {
+      const privilege1 = await Privilege.create({
+        name: 'privilege-A',
+        scope: 'admin'
+      });
+
+      const privilege2 = await Privilege.create({
+        name: 'privilege-B',
+        scope: 'admin'
+      });
+
+      const role = await Role.create({
+        name: 'Role-A',
+        privilegeIds: [privilege1.id, privilege2.id]
+      });
+
+      const res = await request(server)
+        .put(`/v1/roles/${role.id}/privileges`)
+        .send({
+          privilegeIds: [uuid.v4()],
+          action: 'remove'
+        });
+
+      expect(res.statusCode).to.equal(200);
+      expect(res.body.privilegeIds).to.deep.equal([privilege1.id, privilege2.id]);
+    });
+
+    it('should not respond with 200 if role id is wrong', async() => {
+      const res = await request(server)
+        .put(`/v1/roles/${uuid.v4()}/privileges`)
+        .send({
+          privilegeIds: [uuid.v4()],
+          action: 'remove'
+        });
+      expect(res.statusCode).to.equal(404);
+    });
+
+    it('should not respond with 200 if action is wrong', async() => {
+      const res = await request(server)
+        .put(`/v1/roles/${uuid.v4()}/privileges`)
+        .send({
+          privilegeIds: [uuid.v4()],
+          action: 'unknown'
+        });
+      expect(res.statusCode).to.equal(400);
     });
   });
 });

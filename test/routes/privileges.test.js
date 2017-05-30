@@ -158,12 +158,6 @@ describe('v1/privilege', () => {
         .get(`/v1/privileges/${uuid.v4()}/roles`);
       expect(res.statusCode).to.equal(404);
     });
-
-    it('should respond with 404 if privilege id is wrong', async() => {
-      const res = await request(server)
-        .get(`/v1/privileges/${uuid.v4()}/roles`);
-      expect(res.statusCode).to.equal(404);
-    });
   });
 
   describe('add role', () => {

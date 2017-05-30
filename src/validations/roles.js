@@ -34,10 +34,21 @@ const remove = Celebrate({
   }
 });
 
+const managePrivileges = Celebrate({
+  params: {
+    id: Joi.string().guid().description('Role ID').required()
+  },
+  body: {
+    privilegeIds: Joi.array().items(Joi.string().guid().description('Privilege Id')),
+    action: Joi.string().description('Action').required()
+  }
+});
+
 module.exports = {
   read,
   search,
   create,
   update,
-  remove
+  remove,
+  managePrivileges
 };

@@ -52,8 +52,8 @@ router.delete('/v1/roles/:id', validation.remove, async (req, res, next) => {
 
 router.get('/v1/roles/:id/privileges', validation.read, async (req, res, next) => {
   try {
-    const role = await roleActions.readPrivileges(req.params.id);
-    res.json(role);
+    const prvileges = await roleActions.readPrivileges(req.params.id);
+    res.json(prvileges);
   } catch (e) {
     next(e);
   }

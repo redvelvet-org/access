@@ -13,17 +13,17 @@ const read = async (id) => {
 };
 
 const search = async (ids) => {
-  const roles = await Privilege.findAll({
+  const privileges = await Privilege.findAll({
     where: {
       id: ids
     }
   });
 
-  if (!roles.length) {
+  if (!privileges.length) {
     throw boom.notFound();
   }
 
-  return roles;
+  return privileges;
 };
 
 const create = (privilege) => Privilege.create({

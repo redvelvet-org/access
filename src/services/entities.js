@@ -59,7 +59,6 @@ const remove = async (id) => {
   });
 };
 
-
 module.exports = {
   read,
   search,

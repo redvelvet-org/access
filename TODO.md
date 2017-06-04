@@ -3,9 +3,9 @@
 [x] Privileges
 [x] Role-Privileges
 [x] Privileges-Role
+[x] Entities
 [ ] Users
 [ ] User Roles
-[ ] Entities
 [ ] User entities (with entity roles)
 
 - Access Control lists
@@ -31,4 +31,3 @@
 - ACL
 [ ] updateEntity
 [ ] defineRule
-[ ]
